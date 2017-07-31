@@ -1,0 +1,44 @@
+[
+  {
+    "signature": "int isalnum(int c);",
+    "library_name": "ctype",
+    "return_value": "`isalnum` returns a nonzero integer if it is either numeric or alphabetic (e.g. '1' or 'D') and zero if it is neither (e.g. '['). Note that C treats 0 as false and 1 as true; as such, `isalnum` is easily used in conditional statements.",
+    "fun_name": "isalnum",
+    "description": "`isalnum` takes a `char` as input and computes whether the character is alphanumeric."
+  },
+  {
+    "signature": "int isalpha(int c);",
+    "library_name": "ctype",
+    "return_value": "`isalpha` returns a nonzero integer if it is alphabetic (e.g. 'C' or 'S') and zero if it is neither (e.g. '>' or '4'). Note that C treats 0 as false and 1 as true; as such, `isalpha` is easily used in conditional statements.",
+    "fun_name": "isalpha",
+    "description": "`isalpha` takes a character as input and computes whether the character is alphabetic."
+  },
+  {
+    "signature": "int isblank(int c);",
+    "library_name": "ctype",
+    "return_value": "`isblank` returns a nonzero integer if it is blank (e.g. ' ' or '  ', that is, space or tab) and zero if it is neither (e.g. 'y' or '}'). Note that C treats 0 as false and 1 as true; as such, `isblank` is easily used in conditional statements.",
+    "fun_name": "isblank",
+    "description": "`isblank` takes a character as input and calculates whether it is a blank character (space, tab)."
+  },
+  {
+    "signature": "int isdigit(int c);",
+    "library_name": "ctype",
+    "return_value": "`isdigit` returns a nonzero integer if it is a decimal digit and 0 if it is not. Note that C treats 0 as false and 1 as true; as such, `isdigit` is easily used in conditional statements.",
+    "fun_name": "isdigit",
+    "description": "`isdigit` takes a character as input and calculates whether it is a digit. N.B.: Since `isdigit` only covers decimal digits, don't use it for hexadecimal digits, such as `A` or `F`!"
+  },
+  {
+    "signature": "int tolower(int c);",
+    "library_name": "ctype",
+    "return_value": "`tolower` returns the lower case `char` corresponding to the input. However, if the input is not an upper case `char`, the input is simply returned as-is; e.g., `tolower` of `]` would return `]` This does not necessarily hold true outside the range of `unsigned char`.",
+    "fun_name": "tolower",
+    "description": "`tolower` takes a `char` as input. Beware that behavior is undefined outside of the range of `unsigned char` (0 - 127)!"
+  },
+  {
+    "signature": "int toupper(int c);",
+    "library_name": "ctype",
+    "return_value": "`toupper` returns the corresponding upper case `char`. However, if the input is not an lower case `char`, the input is simply returned as-is; e.g., `toupper` of `~` would return `~`. This does not necessarily hold true outside the range of `unsigned char`.",
+    "fun_name": "toupper",
+    "description": "`toupper` takes a `char` as input. Beware that behavior is undefined outside of the range of `unsigned char` (0 - 127)!"
+  }
+]
