@@ -73,50 +73,6 @@ define(function(require, exports, module) {
                                     <p><a href="https://reference.cs50.net/'+[cur_obj.library_name,cur_obj.fun_name].join("/")+ '" target="_blank">More...</a></p>';
         });
         
-        function_details.push(
-            {
-                id           : 'for',
-                name         : 'for',
-                replaceText  : 'for (int i=0; i<limit; i++) { \n\t/*code*/\n}',
-                meta         : "for loop syntax",
-                priority     : 1,
-                isContextual : true
-            }
-        );
-        
-        function_details.push(
-            {
-                id           : 'while',
-                name         : 'while',
-                replaceText  : 'while (/*condition*/) { \n\t/*code*/\n}',
-                meta         : "while loop syntax",
-                priority     : 1,
-                isContextual : true
-            }
-        );
-        
-        function_details.push(
-            {
-                id           : 'do while',
-                name         : 'do while',
-                replaceText  : 'do {\n\t(/*code*/)\n} while (/*condition*/)',
-                meta         : "do-while loop syntax",
-                priority     : 1,
-                isContextual : true
-            }
-        );
-        
-        function_details.push(
-            {
-                id           : 'if',
-                name         : 'if',
-                replaceText  : 'if (/*condition*/) {\n\t/*code for when condition is true*/\n} else {\n\t/*code for when condition is false*/\n}',
-                meta         : "if statement syntax",
-                priority     : 1,
-                isContextual : true
-            }
-        );
-        
         
         //helper function defining the data we send to the worker regarding user settngs [i.e. the less/more comfy view]
         function sendSettings(handler) {
