@@ -1,1 +1,1 @@
-# ccomplete
+This is the Cloud9 simple plugin example
