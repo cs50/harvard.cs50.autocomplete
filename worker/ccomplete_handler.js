@@ -9,6 +9,8 @@ define(function(require, exports, module) {
     var less_comfy;
     //global holding the details of each function autocomplete might suggest
     var suggestion_data;
+    // is code completion turned on?
+    var enabled;
     
     //declare that we run on C and C++ files
     handler.handlesLanguage = function(language) {
@@ -21,6 +23,7 @@ define(function(require, exports, module) {
         //when set comfy config is sent, update the more/less comfy flag
         emitter.on("set_comfy_config", function(e) {
             less_comfy = e.lessComfy;
+            enabled = e.enabled;
         });
         //when send dataset occurs, update the suggestion data
         emitter.on("send_dataset", function(e) {
@@ -37,6 +40,10 @@ define(function(require, exports, module) {
     
     //sends completeion suggestions back to the main window
     handler.complete = function(doc, ast, pos, options, callback) {
+        //if we're turned off, do nothing
+        // if (!enabled) {
+        //     return callback();
+        // }
         //var line = doc.getLine(pos.row);
         //var identifier = options.identifierPrefix; //current var name
         
