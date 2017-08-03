@@ -9,8 +9,6 @@ define(function(require, exports, module) {
     var less_comfy;
     //global holding the details of each function autocomplete might suggest
     var suggestion_data;
-    // is code completion turned on?
-    var enabled;
     
     //declare that we run on C and C++ files
     handler.handlesLanguage = function(language) {
@@ -41,9 +39,13 @@ define(function(require, exports, module) {
     //sends completeion suggestions back to the main window
     handler.complete = function(doc, ast, pos, options, callback) {
         //if we're turned off, do nothing
-        // if (!enabled) {
-        //     return callback();
-        // }
+        // this is the behavior used in the reference implementations, and gets us back to word-search suggestions,
+        // but not a truly disabled autocomplete.
+        console.log("######enabled")
+        console.log(enabled)
+        if (!enabled) {
+            return callback();
+        }
         //var line = doc.getLine(pos.row);
         //var identifier = options.identifierPrefix; //current var name
         

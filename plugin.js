@@ -10,7 +10,6 @@ define(function(require, exports, module) {
         var language = imports.language;
         var settings = imports.settings;
         var preferences = imports.preferences;
-        var registered = false;
         
         /////
         //import and format the raw data about each function
@@ -39,7 +38,6 @@ define(function(require, exports, module) {
         /////
         //helper function defining the data we send to the worker regarding user settngs [i.e. the less/more comfy view]
         function sendSettings(handler) {
-            console.log("sending settings");
             handler.emit("set_comfy_config", {
                 lessComfy: settings.get("user/cs50/simple/@lessComfortable"),
                 enabled: settings.get("project/C/@completion")
@@ -68,9 +66,6 @@ define(function(require, exports, module) {
                     //listen for changes to less/more comfy view and re-send if updated
                     settings.on("user/cs50/simple/@lessComfortable", sendSettings.bind(null, our_worker), plugin);
                     settings.on("project/C/@completion", sendSettings.bind(null, our_worker), plugin);
-                    
-                    //note that we've registered (avoids registering twice)
-                    registered = true;
                 },
                 plugin //lets c9 keep track of who owns the handler
             );
@@ -82,12 +77,11 @@ define(function(require, exports, module) {
         /////
         //runs when the plugin is loaded (plugins may load multiple times, e.g. if disabled and re-enabled in the plugin explorer)
         plugin.on("load", function(){
-            console.log("####loading");
             
             ///
             // add and configure new menu settings
             ///
-            //  note that this code works the same whether in here or in main() [8/2/2017], and the latter is arguably cleaner.
+            //  note that this code beahves the same whether in here or out in main() [8/2/2017], and the latter feels cleaner.
             //  Leaving it in here to match the python/go/php examples, but it's very unclear which is better long-term
             
             //add a switch for c completion being on/off
@@ -117,7 +111,6 @@ define(function(require, exports, module) {
                 "project/C/@completion",
                 function(enabled){
                     if (enabled) {
-                        if (!registered)
                         registerUs();
                     }else{
                         language.unregisterLanguageHandler("plugins/ccomplete.language/worker/ccomplete_handler");
@@ -140,8 +133,6 @@ define(function(require, exports, module) {
         
         //define unload behavior [unregister things, clear global variables]
         plugin.on("unload", function() {
-            console.log("######unloading");
-            registered = false;
             language.unregisterLanguageHandler("plugins/ccomplete.language/worker/ccomplete_handler");
         });
         
