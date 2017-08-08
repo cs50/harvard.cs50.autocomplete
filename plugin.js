@@ -28,6 +28,7 @@ define(function(require, exports, module) {
             cur_obj.docHead      = cur_obj.signature; //cur_obj.library_name+".h";
             cur_obj.priority     = 1;
             cur_obj.isContextual = true;
+            cur_obj.guessTooltip = true;
             cur_obj.doc          = '<p><b> Siganture: </b>' + cur_obj.signature    + '</p>\
                                     <p><b> Input: </b>'     + cur_obj.description  + '</p>\
                                     <p><b> Output: </b>'    + cur_obj.return_value + '</p>\
