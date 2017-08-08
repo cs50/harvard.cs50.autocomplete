@@ -41,19 +41,22 @@ define(function(require, exports, module) {
         //if we're turned off, do nothing
         // this is the behavior used in the reference implementations, and gets us back to word-search suggestions,
         // but not a truly disabled autocomplete.
-        console.log("######enabled")
-        console.log(enabled)
-        if (!enabled) {
-            return callback();
-        }
-        //var line = doc.getLine(pos.row);
-        //var identifier = options.identifierPrefix; //current var name
-        
-        //we always send back the full list of stdlib functions
-        callback(null, suggestion_data);
+        console.log("########message in");
+        setTimeout(
+            function(){
+                if (!enabled) {
+                    return callback();
+                }
+                //var line = doc.getLine(pos.row);
+                //var identifier = options.identifierPrefix; //current var name
+                
+                //we always send back the full list of stdlib functions
+                callback(null, suggestion_data);
+            }, 
+            2000);
     };
     
-    //runs on updates to the code; meant to display wanrings,errors, etc in the gutter
+    //runs on updates to the student's code; meant to display wanrings,errors, etc in the gutter
     handler.analyze = function(value, ast, callback) {
         callback(null, [{
             pos: { sl: 0, el: 0, sc: 0, ec: 0 },
