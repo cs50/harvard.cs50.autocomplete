@@ -24,12 +24,13 @@ define(function(require, exports, module) {
             cur_obj.name         = cur_obj.fun_name+"()";
             cur_obj.replaceText  = cur_obj.fun_name+"(^^)";
             cur_obj.icon         ="method";
-            cur_obj.meta         = cur_obj.library_name+".h";
-            cur_obj.docHead      = cur_obj.signature;
+            cur_obj.meta         = cur_obj.signature; //cur_obj.library_name+".h";
+            cur_obj.docHead      = cur_obj.library_name+".h";
             cur_obj.priority     = 1;
             cur_obj.isContextual = true;
-            cur_obj.doc          = '<p>' + cur_obj.description  + '</p>\
-                                    <p>' + cur_obj.return_value + '</p>\
+            cur_obj.doc          = '<p><b> Siganture: </b>' + cur_obj.signature    + '</p>\
+                                    <p><b> Input: </b>'     + cur_obj.description  + '</p>\
+                                    <p><b> Output: </b>'    + cur_obj.return_value + '</p>\
                                     <p><a href="https://reference.cs50.net/'+[cur_obj.library_name,cur_obj.fun_name].join("/")+ '" target="_blank">More...</a></p>';
         });
         

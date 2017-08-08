@@ -33,7 +33,7 @@ define(function(require, exports, module) {
     //sets when to attempt a completion
     handler.getCompletionRegex = function() {
         // attempt to complete whenever cursor is on a word boundary
-        return /^\w$/; 
+        return /^\w$/;
     };
     
     //sends completeion suggestions back to the main window
