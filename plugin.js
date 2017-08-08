@@ -24,8 +24,8 @@ define(function(require, exports, module) {
             cur_obj.name         = cur_obj.fun_name+"()";
             cur_obj.replaceText  = cur_obj.fun_name+"(^^)";
             cur_obj.icon         ="method";
-            cur_obj.meta         = cur_obj.signature; //cur_obj.library_name+".h";
-            cur_obj.docHead      = cur_obj.library_name+".h";
+            cur_obj.meta         = cur_obj.library_name+".h";
+            cur_obj.docHead      = cur_obj.signature; //cur_obj.library_name+".h";
             cur_obj.priority     = 1;
             cur_obj.isContextual = true;
             cur_obj.doc          = '<p><b> Siganture: </b>' + cur_obj.signature    + '</p>\
@@ -41,7 +41,8 @@ define(function(require, exports, module) {
         function sendSettings(handler) {
             handler.emit("set_comfy_config", {
                 lessComfy: settings.get("user/cs50/simple/@lessComfortable"),
-                enabled: settings.get("project/C/@completion")
+                enabled: settings.get("project/C/@completion"),
+                delay: 1000*settings.get("project/C/@delay")
             } );
         }
         
@@ -67,6 +68,7 @@ define(function(require, exports, module) {
                     //listen for changes to less/more comfy view and re-send if updated
                     settings.on("user/cs50/simple/@lessComfortable", sendSettings.bind(null, our_worker), plugin);
                     settings.on("project/C/@completion", sendSettings.bind(null, our_worker), plugin);
+                    settings.on("project/C/@delay", sendSettings.bind(null, our_worker), plugin);
                 },
                 plugin //lets c9 keep track of who owns the handler
             );
@@ -94,7 +96,12 @@ define(function(require, exports, module) {
                                 position: 1000,
                                 type: "checkbox",
                                 path: "project/C/@completion",
-                            }
+                            },
+                           "Delay before suggestions appear":{
+                               position: 1010,
+                               type: "spinner",
+                               path: "project/C/@delay",
+                           }
                         }
                     }
             }, plugin);
@@ -102,7 +109,8 @@ define(function(require, exports, module) {
             //the new menu item defaults to off
             settings.on("read", function(e) {
                     settings.setDefaults("project/C", [
-                        ["completion", false]
+                        ["completion", false],
+                        ["delay", 1]
                     ]);
             }, plugin);
             

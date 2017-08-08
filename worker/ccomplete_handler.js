@@ -5,10 +5,13 @@ define(function(require, exports, module) {
     var baseHandler = require("plugins/c9.ide.language/base_handler");
     var handler = module.exports = Object.create(baseHandler);
     
+    
     //global flag for whether the user is in less/more comfy view
     var less_comfy;
     //global holding the details of each function autocomplete might suggest
     var suggestion_data;
+    //how long (miliseconds) to wait before poping up the completion suggestions
+    var box_delay;
     
     //declare that we run on C and C++ files
     handler.handlesLanguage = function(language) {
@@ -22,6 +25,7 @@ define(function(require, exports, module) {
         emitter.on("set_comfy_config", function(e) {
             less_comfy = e.lessComfy;
             enabled = e.enabled;
+            box_delay = e.delay;
         });
         //when send dataset occurs, update the suggestion data
         emitter.on("send_dataset", function(e) {
@@ -53,7 +57,8 @@ define(function(require, exports, module) {
                 //we always send back the full list of stdlib functions
                 callback(null, suggestion_data);
             }, 
-            2000);
+            box_delay
+        );
     };
     
     //runs on updates to the student's code; meant to display wanrings,errors, etc in the gutter
