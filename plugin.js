@@ -1,5 +1,5 @@
 define(function(require, exports, module) {
-    main.consumes = ["Plugin", "language","settings","preferences"];
+    main.consumes = ["Plugin", "language","ui","settings","preferences"];
     main.provides = ["ccomplete"];
     return main;
     
@@ -10,6 +10,7 @@ define(function(require, exports, module) {
         var language = imports.language;
         var settings = imports.settings;
         var preferences = imports.preferences;
+        var ui=imports.ui;
         
         /////
         //import and format the raw data about each function
@@ -25,7 +26,7 @@ define(function(require, exports, module) {
             cur_obj.replaceText  = cur_obj.fun_name+"(^^)";
             cur_obj.icon         ="method";
             cur_obj.meta         = cur_obj.library_name+".h";
-            cur_obj.docHead      = cur_obj.signature; //cur_obj.library_name+".h";
+            cur_obj.docHead      = cur_obj.signature;
             cur_obj.priority     = 1;
             cur_obj.isContextual = true;
             cur_obj.guessTooltip = true;
@@ -55,6 +56,10 @@ define(function(require, exports, module) {
         //helper function defining how to spin up the worker thread and define its communication with the main thread
         // called either when user turns on completion, or when the plugin starts (and notices completion option is on)
         function registerUs(){
+            
+            //suppress
+            ui.setStyleRule(".code_complete_doc_text", "display", "none");
+            
             language.registerLanguageHandler(
                 "plugins/ccomplete.language/worker/ccomplete_handler",
                 function(err, our_worker) {
@@ -143,6 +148,7 @@ define(function(require, exports, module) {
         
         //define unload behavior [unregister things, clear global variables]
         plugin.on("unload", function() {
+            ui.setStyleRule(".code_complete_doc_text", "display", "block");
             language.unregisterLanguageHandler("plugins/ccomplete.language/worker/ccomplete_handler");
         });
         
