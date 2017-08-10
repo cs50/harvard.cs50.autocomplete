@@ -1,12 +1,12 @@
 {
-  "name": "",
-  "description": "",
-  "version": "0.0.1",
-  "author": "",
+  "name": "harvard.cs50.autocomplete",
+  "description": "Add autcompletion and tooltips for the C standard library",
+  "version": "0.1.0",
+  "author": "cs50",
   "contributors": [
     {
-      "name": "",
-      "email": ""
+      "name": "Will Claybaugh",
+      "email": "wclaybaugh@g.harvard.edu"
     }
   ],
   "repository": {
@@ -14,7 +14,7 @@
     "url": ""
   },
   "plugins": {
-    "plugin": {}
+    "stdlib_completer": {}
   },
   "categories": ["miscellaneous"],
   "licenses": []

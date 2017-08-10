@@ -58,10 +58,10 @@ define(function(require, exports, module) {
         function registerUs(){
             
             //suppress
-            ui.setStyleRule(".code_complete_doc_text", "display", "none");
+            ui.setStyleRule(".code_complete_doc_text", "display", "none !important");
             
             language.registerLanguageHandler(
-                "plugins/ccomplete.language/worker/ccomplete_handler",
+                "plugins/harvard.cs50.autocomplete/worker/worker_stdlib_completer",
                 function(err, our_worker) {
                     if (err) {
                         return err;
@@ -128,7 +128,7 @@ define(function(require, exports, module) {
                     if (enabled) {
                         registerUs();
                     }else{
-                        language.unregisterLanguageHandler("plugins/ccomplete.language/worker/ccomplete_handler");
+                        language.unregisterLanguageHandler("plugins/harvard.cs50.autocomplete/worker/worker_stdlib_completer");
                     }
                 },
                 plugin
@@ -149,7 +149,7 @@ define(function(require, exports, module) {
         //define unload behavior [unregister things, clear global variables]
         plugin.on("unload", function() {
             ui.setStyleRule(".code_complete_doc_text", "display", "block");
-            language.unregisterLanguageHandler("plugins/ccomplete.language/worker/ccomplete_handler");
+            language.unregisterLanguageHandler("plugins/harvard.cs50.autocomplete/worker/worker_stdlib_completer");
         });
         
         //register the plugin's name
