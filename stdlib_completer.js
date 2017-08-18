@@ -1,31 +1,31 @@
 define(function(require, exports, module) {
-    main.consumes = ["Plugin", "language","ui","settings","preferences"];
+    main.consumes = ["language", "Plugin", "preferences", "settings", "ui"];
     main.provides = ["ccomplete"];
     return main;
     
-    //this function runs once as the ide starts. Responsible for setting plugin's load/unload behavior
+    // this function runs once as the ide starts. Responsible for setting plugin's load/unload behavior
     function main(options, imports, register) {
         var Plugin = imports.Plugin;
         var plugin = new Plugin("CS50.net", main.consumes);
         var language = imports.language;
         var settings = imports.settings;
         var preferences = imports.preferences;
-        var ui=imports.ui;
+        var ui = imports.ui;
         
         /////
-        //import and format the raw data about each function
+        // import and format the raw data about each function
         /////
-        //function_details holds the raw data about each function we want to show up in the autocmplete suggestions
-        var function_details=JSON.parse(require("text!./function_details.json"));
+        // function_details holds the raw data about each function we want to show up in the autocmplete suggestions
+        var function_details = JSON.parse(require("text!./function_details.json"));
         
-        //massage the raw data to include derived fields that c9 cares about
+        // massage the raw data to include derived fields that c9 cares about
         //  ideally, this is done earlier in the pipeline
-        function_details.forEach(function(cur_obj){
+        function_details.forEach(function(cur_obj) {
             cur_obj.id           = cur_obj.fun_name;
-            cur_obj.name         = cur_obj.fun_name+"()";
-            cur_obj.replaceText  = cur_obj.fun_name+"(^^)";
-            cur_obj.icon         ="method";
-            cur_obj.meta         = cur_obj.library_name+".h";
+            cur_obj.name         = cur_obj.fun_name + "()";
+            cur_obj.replaceText  = cur_obj.fun_name + "(^^)";
+            cur_obj.icon         = "method";
+            cur_obj.meta         = cur_obj.library_name + ".h";
             cur_obj.docHead      = cur_obj.signature;
             cur_obj.priority     = 1;
             cur_obj.isContextual = true;
@@ -33,31 +33,34 @@ define(function(require, exports, module) {
             cur_obj.doc          = '<p><b> Siganture: </b>' + cur_obj.signature    + '</p>\
                                     <p><b> Input: </b>'     + cur_obj.description  + '</p>\
                                     <p><b> Output: </b>'    + cur_obj.return_value + '</p>\
-                                    <p><a href="https://reference.cs50.net/'+[cur_obj.library_name,cur_obj.fun_name].join("/")+ '" target="_blank">More...</a></p>';
+                                    <p><a href="https:// reference.cs50.net/' + [cur_obj.library_name, cur_obj.fun_name].join("/") + '" target="_blank">More...</a></p>';
         });
         
         /////
         // helper functions
         /////
-        //helper function defining the data we send to the worker regarding user settngs [i.e. the less/more comfy view]
+        
+        // helper function defining the data we send to the worker regarding user settngs [i.e. the less/more comfy view]
         function sendSettings(handler) {
-            handler.emit("set_comfy_config", {
+            handler.emit("set_options", {
                 lessComfy: settings.get("user/cs50/simple/@lessComfortable"),
                 enabled: settings.get("project/C/@completion"),
-                delay: 1000*settings.get("project/C/@delay")
-            } );
+                delay: 1000 * settings.get("project/C/@delay")
+            });
         }
         
-        //helper function defining the data we send to the worker regarding autcomplete suggestions
+        // helper function defining the data we send to the worker regarding autcomplete suggestions
         function sendAutocompleteData(handler) {
-            handler.emit("send_dataset", {suggestion_data:function_details} );
+            handler.emit("send_dataset", {
+                suggestion_data: function_details
+            });
         }
         
-        //helper function defining how to spin up the worker thread and define its communication with the main thread
+        // helper function defining how to spin up the worker thread and define its communication with the main thread
         // called either when user turns on completion, or when the plugin starts (and notices completion option is on)
-        function registerUs(){
+        function registerUs() {
             
-            //suppress
+            // suppress
             ui.setStyleRule(".code_complete_doc_text", "display", "none !important");
             
             language.registerLanguageHandler(
@@ -67,16 +70,16 @@ define(function(require, exports, module) {
                         return err;
                     }
                     
-                    //send over the formatted function data and whether the user is currently in less/more comfy view
+                    // send over the formatted function data and whether the user is currently in less/more comfy view
                     sendAutocompleteData(our_worker);
                     sendSettings(our_worker);
                     
-                    //listen for changes to less/more comfy view and re-send if updated
+                    // listen for changes to less/more comfy view and re-send if updated
                     settings.on("user/cs50/simple/@lessComfortable", sendSettings.bind(null, our_worker), plugin);
                     settings.on("project/C/@completion", sendSettings.bind(null, our_worker), plugin);
                     settings.on("project/C/@delay", sendSettings.bind(null, our_worker), plugin);
                 },
-                plugin //lets c9 keep track of who owns the handler
+                plugin // lets c9 keep track of who owns the handler
             );
         }
         
@@ -84,75 +87,80 @@ define(function(require, exports, module) {
         /////
         // Event functions
         /////
-        //runs when the plugin is loaded (plugins may load multiple times, e.g. if disabled and re-enabled in the plugin explorer)
-        plugin.on("load", function(){
+        // runs when the plugin is loaded (plugins may load multiple times, e.g. if disabled and re-enabled in the plugin explorer)
+        plugin.on("load", function() {
             
             ///
             // add and configure new menu settings
             ///
-            //  note that this code beahves the same whether in here or out in main() [8/2/2017], and the latter feels cleaner.
+            
+            //  note that this code behaves the same whether in here or out in main() [8/2/2017], and the latter feels cleaner.
             //  Leaving it in here to match the python/go/php examples, but it's very unclear which is better long-term
             
-            //add a switch for c completion being on/off
+            // add a switch for c completion being on/off and delay before completion is shown
             preferences.add({
-                    "Project": {
-                        "C": {
-                            position: 1100,
-                            "Enable C code completion": {
-                                position: 1000,
-                                type: "checkbox",
-                                path: "project/C/@completion",
-                            },
-                           "Delay before suggestions appear":{
-                               position: 1010,
-                               type: "spinner",
-                               path: "project/C/@delay",
-                           }
+                "Project": {
+                    "C": {
+                        position: 1100,
+                        "Enable C code completion": {
+                            position: 1000,
+                            type: "checkbox",
+                            path: "project/C/@completion",
+                        },
+                        "Delay before suggestions appear": {
+                            position: 1010,
+                            type: "spinner",
+                            path: "project/C/@delay",
                         }
                     }
+                }
             }, plugin);
             
-            //the new menu item defaults to off
+            // the new menu item defaults
             settings.on("read", function(e) {
-                    settings.setDefaults("project/C", [
-                        ["completion", false],
-                        ["delay", 1]
-                    ]);
+                settings.setDefaults("project/C", [
+                    ["completion", false],
+                    ["delay", 1]
+                ]);
             }, plugin);
             
-            //we need to listen to completion going on/off, as that means we need to register our handler,
-            //but we don't care about less/more comfy at this time.
+            ///
+            // Register handler at appropriate time
+            ///
+            
+            // we need to listen to completion going on/off, as that means we need to register our handler,
+            // but we don't care about less/more comfy at this time.
             settings.on(
                 "project/C/@completion",
-                function(enabled){
+                function(enabled) {
                     if (enabled) {
                         registerUs();
-                    }else{
+                    } else {
                         language.unregisterLanguageHandler("plugins/harvard.cs50.autocomplete/worker/worker_stdlib_completer");
                     }
                 },
                 plugin
             );
             
-            ///
             // if completion is turned on, register
-            ///
-            enabled=settings.get("project/C/@completion");
-            if (enabled){
-                //sign in our worker code as a language-handling plugin
+            enabled = settings.get("project/C/@completion");
+            if (enabled) {
+                // sign in our worker code as a language-handling plugin
                 registerUs();
-            }else{
-                //do nothing -- registering, even with no return values would enable c9's janky wordsearch-based completion
+            } else {
+                // do nothing -- registering, even with no return values would enable c9's janky wordsearch-based completion
             }
         });
         
-        //define unload behavior [unregister things, clear global variables]
+        // define unload behavior [unregister things, clear global variables]
         plugin.on("unload", function() {
             ui.setStyleRule(".code_complete_doc_text", "display", "block");
             language.unregisterLanguageHandler("plugins/harvard.cs50.autocomplete/worker/worker_stdlib_completer");
         });
         
-        //register the plugin's name
-        register(null, { ccomplete: plugin });
+        // register the plugin's name
+        register(null, {
+            ccomplete: plugin
+        });
     }
 });

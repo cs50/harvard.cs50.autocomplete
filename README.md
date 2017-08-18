@@ -1,1 +1,1 @@
-This is the Cloud9 simple plugin example
+Provides automatic suggestion and completion of all C standard library functions.
