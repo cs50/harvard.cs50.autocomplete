@@ -6,6 +6,10 @@ define(function(require, exports, module) {
     var handler = module.exports = Object.create(baseHandler);
     
     
+    var localCompleter = require("plugins/c9.ide.language.generic/local_completer");
+    var openFilesCompleter = require("plugins/c9.ide.language.generic/open_files_local_completer");
+    var jsonalyzer_worker = require ("plugins/c9.ide.language.jsonalyzer/worker/jsonalyzer_worker");
+    
     //global flag for whether the user is in less/more comfy view
     var less_comfy;
     //global holding the details of each function autocomplete might suggest
@@ -20,13 +24,27 @@ define(function(require, exports, module) {
     
     //runs when the worker is first set up
     handler.init = function(callback) {
-        var emitter = handler.getEmitter();
+        
+        // absolute hack patch to disable the local completers (I can't believe JS allows this...)
+        openFilesCompleter.complete = function(doc, fullAst, pos, options, callback) {
+                callback(null, []);
+        };
+        localCompleter.complete = function(doc, fullAst, pos, options, callback) {
+                callback(null, []);
+        };
+        jsonalyzer_worker.complete = function(doc, fullAst, pos, options, callback) {
+                callback(null, []);
+        };
+        
+        
         //when set comfy config is sent, update the more/less comfy flag
+        var emitter = handler.getEmitter();
         emitter.on("set_comfy_config", function(e) {
             less_comfy = e.lessComfy;
             enabled = e.enabled;
             box_delay = e.delay;
         });
+        
         //when send dataset occurs, update the suggestion data
         emitter.on("send_dataset", function(e) {
             suggestion_data = e.suggestion_data;
